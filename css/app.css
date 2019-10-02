@@ -32,16 +32,27 @@ h1 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
 }
-
+.mt
+{
+    display: flex;
+    justify-content: space-around;
+}
 /*
  * Styles for the deck of cards
  */
 
+ .deck-container {
+    max-width: 100%;
+    height: 100%;
+}
+
+
 .deck {
-    width: 660px;
-    min-height: 680px;
-    background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
-    padding: 32px;
+    width: 600px;
+    max-width: 100%;
+    height: 500px;
+    background: linear-gradient(160deg, #928dda 0%, #09048a 100%);
+    padding: 4px;
     border-radius: 10px;
     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
     display: flex;
@@ -52,8 +63,11 @@ h1 {
 }
 
 .deck .card {
-    height: 125px;
-    width: 125px;
+    min-width: 16px;
+    min-height: 16px;
+    width: 23%;
+    height: 23%;
+    margin: 1% 0%;
     background: #2e3d49;
     font-size: 0;
     color: #ffffff;
@@ -63,6 +77,7 @@ h1 {
     justify-content: center;
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    transition: all 500ms ease;
 }
 
 .deck .card.open {
@@ -86,8 +101,8 @@ h1 {
  */
 
 .score-panel {
-    text-align: left;
-    width: 345px;
+    text-align: center;
+    width: 50%;
     margin-bottom: 10px;
 }
 
@@ -96,6 +111,7 @@ h1 {
     padding: 0;
     display: inline-block;
     margin: 0 5px 0 0;
+    justify-content: center;
 }
 
 .score-panel .stars li {
@@ -106,4 +122,85 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .mheader
+  {
+      display: flex;
+      justify-content: center;
+  }
+  .mbody
+  {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin:10px;
+
+  }
+
+/************media query**********/
+@media only screen and (max-width:500px)
+{
+    .deck-container
+    {
+        width: 100%;
+        height: 300px;
+        margin: 1px;
+
+    }
+    .deck .card
+    {
+        width: 23%;
+        height: 70px;
+
+    }
+}
+@media only screen and (min-width:600px)
+{
+    .deck-container {
+        max-width: 95%;
+    }
+
+    .deck .card {
+        width: 22%;
+        height: 22%;
+    }
+     
 }

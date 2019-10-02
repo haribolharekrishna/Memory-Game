@@ -1,14 +1,18 @@
 /*
  * Create a list that holds all of your cards
  */
+var arr = document.getElementsByClassName('card');
 
+let noofmoves = 0 ;
+let noofopen = 14 ;
+var lastopen;
+var s =0;
+var m =0;
+flag = 0;
+const rest = document.querySelector('.restart');
+rest.addEventListener('click',restart_func);
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+restart_func();
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -19,11 +23,107 @@ function shuffle(array) {
         currentIndex -= 1;
         temporaryValue = array[currentIndex];
         array[currentIndex] = array[randomIndex];
+        array[currentIndex].className = "card";
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
+
+
+function restart_func()
+{
+     arr=shuffle(arr);
+     noofmoves=0;
+     document.querySelector('.moves').textContent = String(noofmoves);
+     document.querySelector('.mins').textContent = "00";
+     document.querySelector('.secs').textContent = "00";
+     s = 0;
+     m = 0;
+     flag = 0;
+}
+function incre()
+{
+    document.querySelector('.mins').textContent = String(getmins());
+    document.querySelector('.secs').textContent = String(getsecs());
+    s++;
+    setTimeout(incre(),1000);
+}
+function getmins()
+{
+    m = Math.floor(s/ 60); 
+    return m; 
+}
+function getsecs()
+{
+    return s - Math.round(m * 60);
+}
+let cls = document.getElementsByClassName('deck')[0];
+for(i = 0; i < 16; i++)
+{
+    cls.appendChild(arr[i]);
+    let temp = arr[i];
+    temp.addEventListener('click',function(){
+        
+        /*if(flag === 0)
+        {
+            flag = 1;
+            setTimeout(incre());
+        }*/
+        if(!temp.classList.contains("match") && !temp.classList.contains("show"))
+        {
+            noofmoves+=1;
+            if(noofmoves%2==0)
+            document.querySelector('.moves').textContent = String(noofmoves/2);
+            temp.className = "card open show";
+            noofopen+=1;
+            if(noofmoves%2==0)
+            {
+                if(lastopen.childNodes[1].className !== temp.childNodes[1].className)
+                {
+                    setTimeout(function(){
+                    lastopen.className = "card";
+                    temp.className = "card";
+                    noofopen-=2;
+                    },500);
+                }
+                else
+                {
+                    lastopen.className = "card match";
+                    temp.className = "card match";
+                }
+                if(noofopen == 16)
+                {
+                    game_end();
+                }
+            }
+            else
+            lastopen = temp;
+        }
+    });
+}
+function game_end()
+{
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    modal.style.display = "block";
+    const modalmoves = document.querySelector('.fmoves');
+    modalmoves.textContent = String(noofmoves/2);
+    span.onclick = function() {
+        modal.style.display = "none";
+      }
+    window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+    }
+}
+
+/*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+ */
 
 
 /*
