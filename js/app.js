@@ -101,8 +101,12 @@ function restart_func()
      document.querySelector('.timer').textContent = "0m 0s"
      clearInterval(x);
 
-}
      let cls = document.getElementsByClassName("deck")[0];
+     var child = cls.lastElementChild;  
+     while (child) { 
+        cls.removeChild(child); 
+        child = cls.lastElementChild; 
+    }  
      for(var i=0;i<16;i++){
         cls.appendChild(items[i]);
     }
@@ -186,6 +190,7 @@ function restart_func()
             }
         });
     }
+}
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
