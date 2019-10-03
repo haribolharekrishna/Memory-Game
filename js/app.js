@@ -1,8 +1,20 @@
 /*
  * Create a list that holds all of your cards
  */
-var arr = document.getElementsByClassName('card');
-
+//var arr = document.getElementsByClassName('card');
+let ulRating = document.querySelector('.stars');
+let rating = 3.0;
+const tiles = {
+    "ANCHOR": "fa-anchor",
+    "BICYCLE": "fa-motorcycle",
+    "BOLT": "fa-bolt",
+    "BOMB": "fa-bomb",
+    "CUBE": "fa-cube",
+    "DIAMOND": "fa-diamond",
+    "LEAF": "fa-leaf",
+    "PAPER_PLANE": "fa-paper-plane"
+};
+let items = new Array(16);
 let noofmoves = 0 ;
 let noofopen = 0 ;
 var lastopen;
@@ -16,17 +28,21 @@ restart_func();
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    var currentIndex = 16, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
         temporaryValue = array[currentIndex];
         array[currentIndex] = array[randomIndex];
-        array[currentIndex].className = "card";
         array[randomIndex] = temporaryValue;
     }
-    return array;
+    for(let i = 0 ; i < 16 ; i++)
+    {
+        items[i] = document.createElement('li');
+        items[i].className = "card";
+        items[i].innerHTML = "<i class=\"fa "+array[i]+"\"></i>";
+    }
 }
 
 function starter()
@@ -43,58 +59,6 @@ function starter()
     },1000);
 
 }
-
-function restart_func()
-{
-     arr=shuffle(arr);
-     noofmoves=0;
-     document.querySelector('.moves').textContent = String(noofmoves);
-     document.querySelector('.timer').textContent = "0m 0s"
-     clearInterval(x);
-}
-let cls = document.getElementsByClassName('deck')[0];
-for(i = 0; i < 16; i++)
-{
-    cls.appendChild(arr[i]);
-    let temp = arr[i];
-    temp.addEventListener('click',function(){
-        
-        if(!temp.classList.contains("match") && !temp.classList.contains("show"))
-        {
-            noofmoves+=1;
-            if(noofmoves==1)
-            {
-                start_time = new Date().getTime();
-                starter();
-            }
-            temp.className = "card open show";
-            if(noofmoves%2==0)
-            {
-                document.querySelector('.moves').textContent = String(noofmoves/2);
-                if(lastopen.childNodes[1].className !== temp.childNodes[1].className)
-                {
-                    setTimeout(function(){
-                    lastopen.className = "card";
-                    temp.className = "card";
-                    },500);
-                }
-                else
-                {
-                    lastopen.className = "card match";
-                    temp.className = "card match";
-                    noofopen+=2;
-                }
-                if(noofopen == 16)
-                {
-                    game_end();
-                    clearInterval(x);
-                }
-            }
-            else
-            lastopen = temp;
-        }
-    });
-}
 function game_end()
 {
     console.log("hello");
@@ -102,6 +66,7 @@ function game_end()
     var span = document.getElementsByClassName("close")[0];
     modal.style.display = "block";
     const modalmoves = document.querySelector('.fmoves');
+    document.querySelector('.rating').textContent = String(rating);
     modalmoves.textContent = String(noofmoves/2);
     span.onclick = function() {
         modal.style.display = "none";
@@ -113,6 +78,114 @@ function game_end()
     }
 }
 
+
+function restart_func()
+{
+     rating = 3.0;
+     ulRating.children.item(0).className = "fa fa-star";
+     ulRating.children.item(1).className = "fa fa-star";
+     ulRating.children.item(2).className = "fa fa-star";
+     var tileitems = new Array(16);
+     var i = 0;
+     for(tile in tiles)
+     {
+         tileitems[i] = tiles[tile];
+         tileitems[i+1] = tiles[tile];
+         i+=2;
+     }
+     shuffle(tileitems);
+     console.log(tileitems);
+     noofmoves = 0;
+     noofopen = 0;
+     document.querySelector('.moves').textContent = String(noofmoves);
+     document.querySelector('.timer').textContent = "0m 0s"
+     clearInterval(x);
+
+}
+     let cls = document.getElementsByClassName("deck")[0];
+     for(var i=0;i<16;i++){
+        cls.appendChild(items[i]);
+    }
+     
+    for(i = 0; i < 16; i++)
+    {
+        let temp = items[i];
+        temp.addEventListener('click',function(){
+            
+            if(!temp.classList.contains("match") && !temp.classList.contains("show"))
+            {
+                noofmoves+=1;
+                if(noofmoves==1)
+                {
+                    start_time = new Date().getTime();
+                    starter();
+                }
+                temp.classList.add("open");
+                temp.classList.add("show");
+                console.log(temp);
+                if(noofmoves%2==0)
+                {
+                    document.querySelector('.moves').textContent = String(noofmoves/2);
+                    if(lastopen.childNodes[0].className !== temp.childNodes[0].className)
+                    {
+                        setTimeout(function(){
+                        lastopen.className = "card";
+                        temp.className = "card";
+                        },500);
+                    }
+                    else
+                    {
+                        lastopen.className = "card match";
+                        temp.className = "card match";
+                        noofopen+=2;
+                    }
+                    if(noofopen == 16)
+                    {
+                        game_end();
+                        clearInterval(x);
+                    }
+                }
+                else
+                lastopen = temp;
+            }
+            if((noofmoves/2)>38){
+                rating = 0.5;
+                ulRating.children.item(0).className = "fa fa-star-half-o";
+                ulRating.children.item(1).className = "";
+                ulRating.children.item(2).className = "";
+            } else if ((noofmoves/2) > 30) {
+                //If moves is greater than 30, set rating to 1 and update UI
+                rating = 1.0;
+                ulRating.children.item(0).className = "fa fa-star";
+                ulRating.children.item(1).className = "";
+                ulRating.children.item(2).className = "";
+            } else if ((noofmoves/2) > 24) {
+                //If moves is greater than 24, set rating to 1.5 and update UI
+                rating = 1.5;
+                ulRating.children.item(0).className = "fa fa-star";
+                ulRating.children.item(1).className = "fa fa-star-half-o";
+                ulRating.children.item(2).className = "";
+            } else if ((noofmoves/2) > 20) {
+                //If moves is greater than 20, set rating to 2 and update UI
+                rating = 2.0;
+                ulRating.children.item(0).className = "fa fa-star";
+                ulRating.children.item(1).className = "fa fa-star";
+                ulRating.children.item(2).className = "";
+            } else if ((noofmoves/2) > 16) {
+                //If moves is greater than 16, set rating to 2.5 and update UI
+                rating = 2.5;
+                ulRating.children.item(0).className = "fa fa-star";
+                ulRating.children.item(1).className = "fa fa-star";
+                ulRating.children.item(2).className = "fa fa-star-half-o";
+            } else {
+                //If moves is less than or equal to 16, set rating to 3 and update UI
+                rating = 3.0;
+                ulRating.children.item(0).className = "fa fa-star";
+                ulRating.children.item(1).className = "fa fa-star";
+                ulRating.children.item(2).className = "fa fa-star";
+            }
+        });
+    }
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
